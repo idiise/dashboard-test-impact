@@ -122,25 +122,27 @@ fig_base_diarrha
 ### Improvement diarrhea End-line
 
 ```{r}
-end_diarrhea <- dataset %>% filter(
-  data_collection_round == "End-line"
-)
-
-  # with(baseline_single,
-  #    barplot(
-  #        table( drinking_water_source_categorization, single_headed_household),
-  #        beside = TRUE,
-  #        legend = TRUE,
-  #           )
-  #    )
+# end_diarrhea <- dataset %>% filter(
+#   data_collection_round == "End-line"
 # )
+# 
+#   # with(baseline_single,
+#   #    barplot(
+#   #        table( drinking_water_source_categorization, single_headed_household),
+#   #        beside = TRUE,
+#   #        legend = TRUE,
+#   #           )
+#   #    )
+# # )
+# 
+# end_diarrhea <- dataset %>% group_by(single_headed_household,data_collection_round) %>%  count(drinking_water_source_categorization) %>% mutate(perc = 100 * n / sum(n)) %>% ungroup() %>% select(-n) %>% mutate_if(is.numeric, round, 1)
+# 
+# # baseline_single_barplot <- baseline_single %>% ggplot(aes(x= single_headed_household, y = perc, fill = drinking_water_source_categorization)) +geom_bar(position="fill", stat = "identity")
+# # ggplotly(baseline_single_barplot)
+# 
+# fig_end_diarrhea <- plot_ly(end_diarrhea, x = ~single_headed_household, y = ~perc, color = ~drinking_water_source_categorization, colors = c("yellow", "blue"))
+# fig_end_diarrhea
 
-end_diarrhea <- dataset %>% group_by(single_headed_household,data_collection_round) %>%  count(drinking_water_source_categorization) %>% mutate(perc = 100 * n / sum(n)) %>% ungroup() %>% select(-n) %>% mutate_if(is.numeric, round, 1)
-
-# baseline_single_barplot <- baseline_single %>% ggplot(aes(x= single_headed_household, y = perc, fill = drinking_water_source_categorization)) +geom_bar(position="fill", stat = "identity")
-# ggplotly(baseline_single_barplot)
-
-fig_end_diarrhea <- plot_ly(end_diarrhea, x = ~single_headed_household, y = ~perc, color = ~drinking_water_source_categorization, colors = c("yellow", "blue"))
-fig_end_diarrhea
+plot(runif(100), type = "l", col = "blue")
 ```
 
