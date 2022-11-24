@@ -1,0 +1,146 @@
+---
+title: "Dashboard impact test"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(plotly)
+
+dataset <- read.csv("Data/Annex  1 - REACH Assessment Test Database_DataAnalyst_v2.csv")
+dataset <- dataset[-c(is.na(dataset$drinking_water_source)),]
+dataset <- dataset %>% mutate(
+  drinking_water_source_categorization = case_when(
+    drinking_water_source == "Cart with small tank or drum" ~ "Unimproved water source",
+    drinking_water_source == "Protected dug well" ~ "Improved water source",
+    drinking_water_source == "Piped water to yard or plot" ~ "Improved water source",
+    drinking_water_source == "Piped water into dwelling (house)" ~ "Improved water source",
+    drinking_water_source == "Bottled water" ~ "Improved water source",
+    drinking_water_source == "Tube well or borehole" ~ "Improved water source",
+    drinking_water_source == "Public tap or standpipe" ~ "Improved water source",
+    drinking_water_source == "Protected spring" ~ "Improved water source",
+    drinking_water_source == "Unprotected dug well" ~ "Unimproved water source",
+    drinking_water_source == "Unprotected spring" ~ "Unimproved water source",
+    drinking_water_source == "Other" ~ "Unimproved water source",
+    drinking_water_source == "Surface water" ~ "Unimproved water source",
+    drinking_water_source == "Tanker-truck" ~ "Unimproved water source",
+    drinking_water_source == "Rainwater collection" ~ "Unimproved water source"
+
+  )
+)
+```
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Improvement Baseline Single Headed household
+
+```{r}
+baseline_single <- dataset %>% filter(
+  data_collection_round == "Baseline"
+)
+
+  # with(baseline_single,
+  #    barplot(
+  #        table( drinking_water_source_categorization, single_headed_household),
+  #        beside = TRUE,
+  #        legend = TRUE,
+  #           )
+  #    )
+# )
+
+baseline_single <- dataset %>% group_by(single_headed_household,data_collection_round) %>%  count(drinking_water_source_categorization) %>% mutate(perc = 100 * n / sum(n)) %>% ungroup() %>% select(-n) %>% mutate_if(is.numeric, round, 1)
+
+# baseline_single_barplot <- baseline_single %>% ggplot(aes(x= single_headed_household, y = perc, fill = drinking_water_source_categorization)) +geom_bar(position="fill", stat = "identity")
+# ggplotly(baseline_single_barplot)
+
+fig_base_sing <- plot_ly(baseline_single, x = ~single_headed_household, y = ~perc, color = ~drinking_water_source_categorization)
+fig_base_sing
+
+```
+
+### Improvement End-line Single Headed household
+
+
+```{r}
+end_single <- dataset %>% filter(
+  data_collection_round == "End-line"
+)
+
+  # with(baseline_single,
+  #    barplot(
+  #        table( drinking_water_source_categorization, single_headed_household),
+  #        beside = TRUE,
+  #        legend = TRUE,
+  #           )
+  #    )
+# )
+
+end_single <- dataset %>% group_by(single_headed_household,data_collection_round) %>%  count(drinking_water_source_categorization) %>% mutate(perc = 100 * n / sum(n)) %>% ungroup() %>% select(-n) %>% mutate_if(is.numeric, round, 1)
+
+# baseline_single_barplot <- baseline_single %>% ggplot(aes(x= single_headed_household, y = perc, fill = drinking_water_source_categorization)) +geom_bar(position="fill", stat = "identity")
+# ggplotly(baseline_single_barplot)
+    fcg_colors = c("Acceptable" = "#27AE60","Limite" = "#F1C40F","Pauvre" = "#C0392B")
+
+fig_end_sing <- plot_ly(end_single, x = ~single_headed_household, y = ~perc, color = ~drinking_water_source_categorization, colors = c("yellow", "blue"))
+fig_end_sing
+```
+
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Improvement diarrhea Baseline
+
+```{r}
+baseline_diarrhea <- dataset %>% filter(
+  data_collection_round == "Baseline"
+)
+
+  # with(baseline_single,
+  #    barplot(
+  #        table( drinking_water_source_categorization, single_headed_household),
+  #        beside = TRUE,
+  #        legend = TRUE,
+  #           )
+  #    )
+# )
+
+baseline_diarrhea <- dataset %>% group_by(diarrhea_under_5,data_collection_round) %>%  count(drinking_water_source_categorization) %>% mutate(perc = 100 * n / sum(n)) %>% ungroup() %>% select(-n) %>% mutate_if(is.numeric, round, 1)
+
+# baseline_single_barplot <- baseline_single %>% ggplot(aes(x= single_headed_household, y = perc, fill = drinking_water_source_categorization)) +geom_bar(position="fill", stat = "identity")
+# ggplotly(baseline_single_barplot)
+
+fig_base_diarrha <- plot_ly(baseline_diarrhea, x = ~diarrhea_under_5, y = ~perc, color = ~drinking_water_source_categorization)
+fig_base_diarrha
+```
+
+### Improvement diarrhea End-line
+
+```{r}
+end_diarrhea <- dataset %>% filter(
+  data_collection_round == "End-line"
+)
+
+  # with(baseline_single,
+  #    barplot(
+  #        table( drinking_water_source_categorization, single_headed_household),
+  #        beside = TRUE,
+  #        legend = TRUE,
+  #           )
+  #    )
+# )
+
+end_diarrhea <- dataset %>% group_by(single_headed_household,data_collection_round) %>%  count(drinking_water_source_categorization) %>% mutate(perc = 100 * n / sum(n)) %>% ungroup() %>% select(-n) %>% mutate_if(is.numeric, round, 1)
+
+# baseline_single_barplot <- baseline_single %>% ggplot(aes(x= single_headed_household, y = perc, fill = drinking_water_source_categorization)) +geom_bar(position="fill", stat = "identity")
+# ggplotly(baseline_single_barplot)
+
+fig_end_diarrhea <- plot_ly(end_diarrhea, x = ~single_headed_household, y = ~perc, color = ~drinking_water_source_categorization, colors = c("yellow", "blue"))
+fig_end_diarrhea
+```
+
